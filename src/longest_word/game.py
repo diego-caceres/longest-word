@@ -2,6 +2,7 @@
 # pylint: disable=too-few-public-methods
 import string
 import random
+import requests
 
 class Game:
     """
@@ -26,7 +27,19 @@ class Game:
                 letters.remove(letter)
             else:
                 return False
-        return True
+
+        return self.__check_dictionary(word)
+
+    @staticmethod
+    def __check_dictionary(word):
+        # Call the API to check if word is valid
+        response = requests.get(f"https://dictionary.lewagon.com/{word}")
+        json_response = response.json()
+        print(json_response)
+        return json_response['found']
 
 if __name__ == '__main__':
     game = Game()
+    game.grid = list('TOAMFTO') # Force the grid to a test case:
+    result = game.is_valid('TOMATO')
+    print(result)
